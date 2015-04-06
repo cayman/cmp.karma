@@ -11,6 +11,41 @@ module.exports = function (grunt) {
         return this(code === 0);
     }
 
+    function getFiles(file) {
+
+        var pattern;
+        var files = [];
+        var isObject;
+
+        if (_.isFunction(file)) {
+            file = file();
+        }
+
+        if ((isObject = _.isObject(file)) === true) {
+            pattern = file.pattern || file.src;
+        } else if (_.isString(file)) {
+            pattern = file;
+        }
+
+        if (pattern) {
+            files = pattern.split(',').map(function (src) {
+                var obj = {
+                    pattern: src
+                };
+                if (isObject) {
+                    ['watched', 'served', 'included'].forEach(function (opt) {
+                        if (opt in file) {
+                            obj[opt] = file[opt];
+                        }
+                    });
+                }
+                return obj;
+            });
+        }
+        return files;
+    }
+
+
     grunt.registerMultiTask('cmpKarma', 'run karma.', function() {
         var done = this.async();
         var options = this.options({
@@ -60,32 +95,21 @@ module.exports = function (grunt) {
         var files = [];
 
         if (data.files) {
-            data.files.map(function(file){
-                if(_.isString(file)){
-                    files = files.concat(file.split(',').map(function(src){
-                        return {
-                            pattern: src
-                        };
-                    }));
+            if(_.isFunction(data.files)){
+                data.files = data.files();
+            }
 
-                }else if(file.pattern){
-                    files = files.concat(file.pattern.split(',').map(function(src){
-                        var obj = {
-                            pattern: src
-                        };
-                        ['watched', 'served', 'included'].forEach(function(opt) {
-                            if (opt in file) {
-                                obj[opt] = file[opt];
-                            }
-                        });
-                        return obj;
-                    }));
-                }
-
-            });
+            if(_.isArray(data.files)){
+                data.files.map(function(file){
+                    files = files.concat(getFiles(file));
+                });
+            }else{
+                files = getFiles(data.files) ;
+            }
 
         }
         data.files = files;
+        //grunt.log.writeln('>> files:',files);
         grunt.verbose.writeln('>> data:',data);
 
         // Allow the use of templates in preprocessors
