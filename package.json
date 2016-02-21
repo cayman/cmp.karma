@@ -6,10 +6,10 @@
         "name": "Zakirov"
     },
     "main": "tasks/karma.js",
-    "homepage" : "https://github.com/cayman/cmp.karma",
-    "repository" : {
-        "type" : "git",
-        "url" : "https://github.com/cayman/cmp.karma.git"
+    "homepage": "https://github.com/cayman/cmp.karma",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cayman/cmp.karma.git"
     },
     "engines": {
         "node": ">= 0.8.0"
@@ -30,11 +30,16 @@
         "karma-junit-reporter": "~0.2.1"
     },
     "peerDependencies": {
-        "grunt": "0.4.x",
+        "grunt": ">=0.4.0",
         "karma": "~0.12.0"
     },
     "keywords": [
-        "gruntplugin","generator-cmp","karma","test","unit","runner"
+        "gruntplugin",
+        "generator-cmp",
+        "karma",
+        "test",
+        "unit",
+        "runner"
     ],
     "license": " MIT",
     "readmeFilename": "README.md"
